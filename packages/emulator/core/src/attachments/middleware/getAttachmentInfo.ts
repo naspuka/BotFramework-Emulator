@@ -56,14 +56,14 @@ export default function getAttachmentInfo(botEmulator: BotEmulator) {
         if (attachment.originalBase64) {
           attachmentInfo.views.push({
             viewId: 'original',
-            size: new Buffer(attachment.originalBase64, 'base64').length,
+            size: Buffer.from(attachment.originalBase64, 'base64').length,
           });
         }
 
         if (attachment.thumbnailBase64) {
           attachmentInfo.views.push({
             viewId: 'thumbnail',
-            size: new Buffer(attachment.thumbnailBase64, 'base64').length,
+            size: Buffer.from(attachment.thumbnailBase64, 'base64').length,
           });
         }
 
