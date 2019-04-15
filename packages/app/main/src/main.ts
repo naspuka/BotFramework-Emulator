@@ -63,6 +63,7 @@ import { WindowManager } from './windowManager';
 
 export let mainWindow: Window;
 export let windowManager: WindowManager;
+let splashWindow: Window;
 
 // start app startup timer
 const beginStartupTime = Date.now();
@@ -395,6 +396,7 @@ const createMainWindow = async () => {
       settingsStore.dispatch(rememberTheme(isHighContrast ? 'high-contrast' : themeInfo.name));
     }
     mainWindow.webContents.setZoomLevel(zoomLevel);
+    splashWindow.browserWindow.close();
     mainWindow.browserWindow.show();
 
     // Start auto-updater
@@ -466,10 +468,33 @@ function loadMainPage() {
 
 app.on('ready', function() {
   if (!mainWindow) {
+    // create the splash window
+    splashWindow = new Window(
+      new BrowserWindow({
+        show: false,
+        width: 400,
+        height: 400,
+        center: true,
+        frame: false,
+      })
+    );
+    // dereference on close
+    splashWindow.browserWindow.once('closed', () => {
+      splashWindow = null;
+    });
+    splashWindow.browserWindow.loadURL(`${process.env.ELECTRON_TARGET_URL}splash.html`);
+    splashWindow.browserWindow.once('ready-to-show', () => {
+      // only show if the main window still hasn't loaded
+      const showSplashScreen = !mainWindow || (mainWindow.browserWindow && !mainWindow.browserWindow.isVisible());
+      if (showSplashScreen) {
+        // eslint-disable-next-line no-console
+        console.log('showing splash');
+        splashWindow.browserWindow.show();
+      }
+    });
     if (process.argv.find(val => val.includes('--vscode-debugger'))) {
       // workaround for delay in vscode debugger attach
       setTimeout(createMainWindow, 5000);
-      // createMainWindow();
     } else {
       createMainWindow();
     }
