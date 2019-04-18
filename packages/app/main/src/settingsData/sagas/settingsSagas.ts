@@ -31,14 +31,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 import { FrameworkSettings, Settings, SharedConstants } from '@bfemulator/app-shared';
+import { call, ForkEffect, select, takeEvery } from 'redux-saga/effects';
 
 import { emulator } from '../../emulator';
 import { mainWindow } from '../../main';
 import { NgrokService } from '../../ngrokService';
 import { FrameworkAction, SET_FRAMEWORK } from '../actions/frameworkActions';
 import { REMEMBER_THEME, RememberThemePayload, WindowStateAction } from '../actions/windowStateActions';
-
-import { call, ForkEffect, select, takeEvery } from 'redux-saga/effects';
 
 const getAvailableThemes = (state: Settings) => state.windowState.availableThemes;
 const getCurrentTheme = (state: Settings) => state.windowState.theme;

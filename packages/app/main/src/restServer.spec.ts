@@ -48,11 +48,11 @@ jest.mock('./main', () => ({
 }));
 
 jest.mock('./emulator', () => ({
-  emulator: new class {
+  emulator: new (class {
     report() {
       return null;
     }
-  }(),
+  })(),
 }));
 
 describe('The restServer', () => {
